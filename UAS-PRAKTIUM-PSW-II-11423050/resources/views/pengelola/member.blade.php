@@ -40,11 +40,16 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="mt-4">Member Management</h1>
-                    <p>Manage member data below</p>
+                    <h1 class="mt-4">Data Member Lapangan</h1>
+                    <p>Managemen data member dibawah ini</p>
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addMemberModal">
                         Tambah Member
                     </button>
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">
+                        {{ Session::get('success') }}
+                    </div>
+                    @endif
                     <div class="card-body">
                         <table id="table_id" class="dataTable table table-bordered">
                             <thead>
@@ -69,7 +74,7 @@
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editMemberModal" data-id="">
                                             Edit
                                         </button><br><br>
-                                        <a href="" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin?')">
+                                        <a href="{{ route('hapusmember', ['id' => $user->id]) }}" class="btn btn-danger btn-sm" onclick="return confirm('Apakah anda yakin?')">
                                             Hapus
                                         </a>
                                     </td>
@@ -94,7 +99,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
+                    <form action="{{route('tambahmember')}}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="nama">Nama Member</label>

@@ -5,7 +5,7 @@
             <a class="nav-link active" href="/pengelola/index">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#">Lokasi</a>
+            <a class="nav-link active" href="/pengelola/lokasi">Lokasi</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/pengelola/member">Member</a>

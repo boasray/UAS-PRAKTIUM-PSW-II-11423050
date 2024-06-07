@@ -15,9 +15,10 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->role == 'admin') {
+        $user = $request->user();
+        if ($user && $user->role == 'admin') {
             return $next($request);
         }
-        abort(403, 'Akses Anda di tolak, anda bukan admin');
+        abort(403, 'Akses Anda ditolak');
     }
 }

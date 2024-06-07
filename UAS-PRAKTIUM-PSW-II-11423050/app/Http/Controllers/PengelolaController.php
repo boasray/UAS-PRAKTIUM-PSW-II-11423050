@@ -10,6 +10,7 @@ use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class PengelolaController extends Controller
@@ -66,34 +67,34 @@ class PengelolaController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'noHp' => 'required|string|max:15',
-            'username' => 'required|string|max:255|unique:members,username',
-            'password' => 'required|string|min:6',
-        ],[
-            'nama.required' => 'Nama harus diisi',
-            'noHp.required' => 'Nomor Hp harus diisi',
-            'username.required' => 'Username harus diisi',
-            'username.min' => 'Username harus diisi',
-            'password.required' => 'Password harus diisi',
-
-        ]);
-
-        DB::table('penggunas')->insert([
-            'nama_member' => $validatedData['nama_member'],
-            'no_hp' => $validatedData['no_hp'],
-            'username' => $validatedData['username'],
-            'password' => $validatedData['password'],
-
-        ]);
-
-        Session::flash('success', 'Data Lokasi baru dengan nama "' . $validatedData['namaLokasi'] . '" berhasil ditambahkan!');
-
-        return redirect()->route('indexmember');
-    }
+     public function createmember(Request $request)
+     {
+         $validatedData = $request->validate([
+             'nama' => 'required|string|max:255',
+             'noHp' => 'required|string|max:15',
+             'username' => 'required|string|min:5|max:20',
+             'password' => 'required|string|min:5|max:10',
+ 
+         ],[
+             'nama.required' => 'Nama harus diisi',
+             'nomor_hp.required' => 'Nomor Hp harus diisi',
+             'username.required' => 'Username harus diisi',
+             'username.min' => 'Username minimal 5 karakter',
+             'password.required' => 'Password harus diisi',
+             'password.min' => 'Password minimal 5 karakter',
+         ]);
+ 
+         DB::table('penggunas')->insert([
+             'nama' => $validatedData['nama'],
+             'noHp' => $validatedData['noHp'],
+             'username' => $validatedData['username'],
+             'password' => Hash::make($validatedData['password']),
+         ]);
+ 
+         Session::flash('success', 'Data Member baru dengan nama "' . $validatedData['nama'] . '" berhasil ditambahkan!');
+ 
+         return redirect()->route('indexmember');
+     }
 
     /**
      * Display the specified resource.
@@ -167,4 +168,18 @@ class PengelolaController extends Controller
         $member = Pengguna::all();
     return view('pengelola.member', compact('member'));
     }
+
+    public function indexlokasi(){
+        $lokasi = Lokasi::all();
+        $pengelola = Pengelola::all();
+        return view('pengelola.lokasi', compact('lokasi', 'pengelola'));
+    }
+
+    public function hapusmember($id){
+        DB::table('penggunas')->where('id', $id)->delete();
+    
+            Session::flash('success', 'Data Member berhasil dihapus!');
+    
+            return Redirect()->route('indexmember');
+       }
 }
